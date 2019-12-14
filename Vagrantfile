@@ -13,12 +13,14 @@ Vagrant.configure("2") do |config|
       vb.customize ["modifyvm", :id, "--memory", "512"]
       vb.customize ["modifyvm", :id, "--cpus", "2"]
       end
-    ansible.vm.provision :shell, inline: "yum update -y && \
-      yum install -y centos-release-scl && \
+    ansible.vm.provision :shell, inline: "yum install -y centos-release-scl && \
       yum update -y && \
       yum install -y rh-python36 && \
       scl enable rh-python36 bash && \
-      yum install -y ansible vim"
+      yum install -y ansible vim wget && \
+      yum install -y https://packages.chef.io/files/stable/chef-server/13.0.17/el/7/chef-server-core-13.0.17-1.el7.x86_64.rpm && \
+      yum install -y https://yum.puppet.com/puppet6-release-el-7.noarch.rpm && \
+      yum install -y puppetserver puppetdb"
     ansible.vm.provision :shell, inline: "setenforce 0", run: "always"
     ansible.vm.provision :shell, inline: "sudo -u vagrant ssh-keygen -b 2048 -t rsa -f /home/vagrant/.ssh/id_rsa -q -N ''"
     ansible.vm.provision "file", source: "ansible/files/hosts_file", destination: "~/"
